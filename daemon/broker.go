@@ -43,7 +43,7 @@ func parseMQTTMessage(msg mqtt.Message) *store.Info {
 	metrics := filepath.Base(msg.Topic())
 
 	return &store.Info{
-		Name:     fmt.Sprintf("%s,%s", deviceId, metrics),
+		Name:     fmt.Sprintf("%s@%s", deviceId, metrics),
 		DeviceId: deviceId,
 		Metrics:  metrics,
 		Value:    string(msg.Payload()),
