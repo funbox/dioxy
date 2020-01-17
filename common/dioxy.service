@@ -1,0 +1,11 @@
+[Unit]
+Description=Dioxy Server
+After=network.target
+
+[Service]
+PIDFile=/var/run/dioxy/dioxy.pid
+ExecStart=/etc/init.d/dioxy start
+ExecStop=/etc/init.d/dioxy stop
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,46 @@
+[mqtt]
+
+  # MQTT broker IP
+  ip: mqtt.example.tld
+
+  # MQTT broker port
+  port: 1883 
+
+  # MQTT username to authenticate to
+  user: username
+
+  # MQTT password to authenticate to
+  password: keepinsecret
+
+  # MQTT topic to listen to
+  topic: /devices/MT8060/#
+
+[store]
+
+  # Time in seconds to delete obsolete data (TTL)
+  ttl: 86400
+
+  # Time in seconds between looking for an obsolete data
+  clean-interval: 1500
+
+[http]
+
+  # HTTP server IP
+  ip:
+
+  # HTTP server port
+  port: 33407
+
+[log]
+
+  # Log file dir
+  dir: /var/log/dioxy/
+
+  # Path to log file
+  file: {log:dir}/dioxy.log
+
+  # Log permissions
+  perms: 600
+
+  # Default log level (debug/info/warn/error/crit)
+  level: debug
