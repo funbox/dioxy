@@ -1,0 +1,10 @@
+LICENSE
+Makefile
+README.md
+common/dioxy.init
+common/dioxy.service
+common/dioxy.logrotate
+common/dioxy.knf
+daemon/*.go
+dioxy.go
+store/*.go
