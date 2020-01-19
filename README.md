@@ -75,27 +75,27 @@ Set up `dioxy` configuration to aggregate MQTT metrics.
 ```shell
 [mqtt]
 
-  # MQTT broker IP
+  # MQTT broker IP or FQDN
   ip: mqtt.example.tld
 
   # MQTT broker port
   port: 1883 
 
-  # MQTT username to authenticate to
+  # MQTT username (required)
   user: username
 
-  # MQTT password to authenticate to
+  # MQTT password (required)
   password: keepinsecret
 
-  # MQTT topic to listen to
+  # MQTT topic prefix expression
   topic: /devices/MT8060/#
 
 [store]
 
-  # Time in seconds to delete obsolete data (TTL)
+  # Time in seconds to delete orphaned metrics (TTL)
   ttl: 86400
 
-  # Time in seconds between looking for an obsolete data
+  # Time in seconds between looking for an orphaned metrics
   clean-interval: 1500
 
 [http]
@@ -118,7 +118,7 @@ Set up `dioxy` configuration to aggregate MQTT metrics.
   perms: 600
 
   # Default log level (debug/info/warn/error/crit)
-  level: debug
+  level: info
 ```
 
 Launch systemd unit and make sure it will be launched after reboot.
