@@ -55,7 +55,7 @@
 
 Summary:         Aggregating proxy for MQTT
 Name:            dioxy
-Version:         1.0.0
+Version:         1.0.1
 Release:         0%{?dist}
 Group:           Applications/System
 License:         MIT
@@ -174,5 +174,5 @@ fi
 ################################################################################
 
 %changelog
-* Sun Jan 19 2020 Gleb Goncharov <inbox@gongled.ru> - 1.0.0-0
+* Sun Jan 19 2020 Gleb Goncharov <inbox@gongled.ru> - 1.0.1-0
 - Initial public release
