@@ -38,23 +38,30 @@
 
 ################################################################################
 
+%define __ln              %{_bin}/ln
+%define __touch           %{_bin}/touch
+%define __service         %{_sbin}/service
+%define __chkconfig       %{_sbin}/chkconfig
+%define __useradd         %{_sbindir}/useradd
+%define __groupadd        %{_sbindir}/groupadd
+%define __getent          %{_bindir}/getent
+%define __systemctl       %{_bindir}/systemctl
+
+################################################################################
+
 %define debug_package     %{nil}
 
 ################################################################################
 
-%define srcdir            src/github.com/gongled/%{name}
-
-################################################################################
-
-Summary:         Utility for aggregating MQTT metrics
+Summary:         Aggregating proxy for MQTT
 Name:            dioxy
-Version:         1.0.0
+Version:         1.0.1
 Release:         0%{?dist}
 Group:           Applications/System
 License:         MIT
 URL:             https://github.com/gongled/dioxy
 
-Source0:         %{name}-%{version}.tar.bz2
+Source0:         https://github.com/gongled/%{name}/archive/v%{version}.tar.gz
 
 BuildRoot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -71,7 +78,7 @@ Provides:        %{name} = %{version}-%{release}
 ################################################################################
 
 %description
-Utility for aggregating MQTT metrics
+Aggregating proxy for MQTT broker metrics which represents data in JSON format.
 
 ################################################################################
 
@@ -81,9 +88,8 @@ Utility for aggregating MQTT metrics
 %build
 export GOPATH=$(pwd)
 
-pushd %{srcdir}
-  %{__make} %{?_smp_mflags} %{name}
-popd
+%{__make} %{?_smp_mflags} deps
+%{__make} %{?_smp_mflags} %{name}
 
 %install
 rm -rf %{buildroot}
@@ -96,30 +102,59 @@ install -dm 755 %{buildroot}%{_unitdir}
 install -dm 755 %{buildroot}%{_logdir}/%{name}
 install -dm 755 %{buildroot}%{_rundir}/%{name}
 
-install -pm 755 %{srcdir}/%{name} \
+install -pm 755 %{name} \
                 %{buildroot}%{_bindir}/
 
-install -pm 644 %{srcdir}/common/%{name}.knf \
+install -pm 644 common/%{name}.knf \
                 %{buildroot}%{_sysconfdir}/
 
-install -pm 755 %{srcdir}/common/%{name}.init \
+install -pm 755 common/%{name}.init \
                 %{buildroot}%{_initddir}/%{name}
 
-install -pm 644 %{srcdir}/common/%{name}.logrotate \
+install -pm 644 common/%{name}.logrotate \
                 %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
 %if 0%{?rhel} >= 7
-install -pDm 644 %{srcdir}/common/%{name}.service \
+install -pDm 644 common/%{name}.service \
                  %{buildroot}%{_unitdir}/
 %endif
 
 %clean
 rm -rf %{buildroot}
 
+################################################################################
+
 %pre
 getent group %{name} >/dev/null || groupadd -r %{name}
 getent passwd %{name} >/dev/null || useradd -r -M -g %{name} -s /sbin/nologin %{name}
 exit 0
+
+%post
+if [[ $1 -eq 1 ]] ; then
+    %if 0%{?rhel} <= 6
+    %{__chkconfig} --add %{name}
+    %else
+    %{__systemctl} enable %{name}.service &>/dev/null || :
+    %endif
+fi
+
+%preun
+if [[ $1 -eq 0 ]] ; then
+    %if 0%{?rhel} <= 6
+    %{__service} %{name} stop &>/dev/null || :
+    %{__chkconfig} --del %{service_name}
+    %else
+    %{__systemctl} --no-reload disable %{name}.service &>/dev/null || :
+    %{__systemctl} stop %{name}.service &>/dev/null || :
+    %endif
+fi
+
+%postun
+%if 0%{?rhel} >= 7
+if [[ $1 -ge 1 ]] ; then
+    %{__systemctl} daemon-reload &>/dev/null || :
+fi
+%endif
 
 ################################################################################
 
@@ -139,5 +174,5 @@ exit 0
 ################################################################################
 
 %changelog
-* Fri Jan 17 2020 Gleb Goncharov <inbox@gongled.ru> - 1.0.0-0
+* Sun Jan 19 2020 Gleb Goncharov <inbox@gongled.ru> - 1.0.1-0
 - Initial public release

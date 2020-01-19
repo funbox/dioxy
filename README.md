@@ -1,4 +1,4 @@
-[About](#about) • [Installation](#installation) • [Getting started](#getting-started) • [Usage](#usage) • [License](#license)
+[About](#about) • [How it works](#how-it-works) • [MQTT message format](#mqtt-message-format) • [Installation](#installation) • [Getting started](#getting-started) • [Restrictions](#restrictions) • [Usage](#usage) • [License](#license)
 
 # About
 
@@ -51,6 +51,12 @@ Every measurement also includes `updated_at` field - particular time when the la
 ### From prebuilt package for RHEL7/CentOS7
 
 You can find RPM packages attached to releases on [Release page](https://github.com/gongled/dioxy/releases).
+
+Please, keep in mind that ESSENTIAL KAOS RHEL/CentOS 7 should be installed.
+
+```
+[sudo] yum install -y https://yum.kaos.st/kaos-repo-latest.el7.noarch.rpm
+```
 
 ### From the source code
 
