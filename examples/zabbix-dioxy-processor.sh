@@ -5,6 +5,9 @@
 # Dioxy URL endpoint
 DIOXY_URL="http://127.0.0.1:33407"
 
+# Dioxy topic prefix
+DIOXY_TOPIC_PREFIX="office"
+
 ################################################################################
 
 # error print message to /dev/stderr
@@ -14,7 +17,7 @@ DIOXY_URL="http://127.0.0.1:33407"
 # Code: No
 # Echo: Yes
 error() {
-  echo "$@" >/dev/stderr
+  echo "$@" >&2
 }
 
 # zbx.get returns ordinary item by given key
@@ -39,12 +42,18 @@ zbx.get() {
     exit
   fi
 
-  keyFormat="${deviceId}@${metrics}"
-  value=$(echo "$body" | jq -r '."'"${keyFormat}"'".value')
+  key="@${DIOXY_TOPIC_PREFIX}@${deviceId}@${metrics}"
+  value=$(echo "$body" | jq -r '."'"${key}"'".value')
   retval=$?
 
   if [[ $retval -ne 0 ]] ; then
     error "Error: cannot parse metrics from received payload"
+    echo ZBX_NOT_SUPPORTED
+    exit
+  fi
+
+  if [[ "$value" == "null" ]] ; then
+    error "Error: key is not available: ${key}"
     echo ZBX_NOT_SUPPORTED
     exit
   fi

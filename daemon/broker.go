@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"path/filepath"
 	"pkg.re/essentialkaos/ek.v10/log"
+	"strings"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -13,8 +14,6 @@ import (
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
-
-const STORE_KEY_FORMAT = "%s@%s"
 
 var datastore *store.Store
 
@@ -41,15 +40,14 @@ func startObserver(ip, port, user, password, topic string, ttl int) error {
 
 // parseMQTTMessage parses MQTT message to Info struct
 func parseMQTTMessage(msg mqtt.Message) *store.Info {
-	prefix := filepath.Dir(msg.Topic())
-	deviceId := filepath.Base(prefix)
+	topic := strings.ReplaceAll(msg.Topic(), "/", "@")
 	metrics := filepath.Base(msg.Topic())
+	value := string(msg.Payload())
 
 	return &store.Info{
-		Name:     fmt.Sprintf(STORE_KEY_FORMAT, deviceId, metrics),
-		DeviceId: deviceId,
-		Metrics:  metrics,
-		Value:    string(msg.Payload()),
+		Topic:   topic,
+		Metrics: metrics,
+		Value:   value,
 	}
 }
 

@@ -13,11 +13,10 @@ type Store struct {
 }
 
 type Info struct {
-	Name      string `json:"-"`
-	DeviceId  string `json:"device_id"`
+	Topic     string `json:"-"`
 	Metrics   string `json:"metrics"`
 	Value     string `json:"value"`
-	Timestamp int64  `json:"-"`
+	Timestamp int64  `json:"updated_at"`
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -33,7 +32,7 @@ func NewStore(maxStoreTime time.Duration) *Store {
 // Add adds new data
 func (s *Store) Add(info *Info) {
 	info.Timestamp = time.Now().Unix()
-	s.info.Set(info.Name, info)
+	s.info.Set(info.Topic, info)
 }
 
 // Get return latest info data for metric
