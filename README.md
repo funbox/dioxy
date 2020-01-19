@@ -139,9 +139,11 @@ Done.
 ## Restrictions
 
 We do not provide any mechanism to assosiate metrics with aggregating function.
-`dioxy` replaces the last value every time we receive a next one.
+`dioxy` replaces the last value every time we receive a next one. We rely that
+your monitoring system is processing data on their own if needed.
 
-We rely that your monitoring system is processing data on their own if needed.
+`dioxy` also does not support TLS encryption and anonymous access to MQTT
+broker. We will improve this a bit later.
 
 ## Usage
 
