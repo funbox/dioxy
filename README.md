@@ -6,6 +6,46 @@
 mostly for collecting CO2, temperature and humidity metrics from MT8060 in pair with ESP8266 microcontroller. This project is a
 part of health measurement system for office workers.
 
+## How it works
+
+When you run `dioxy`, it connects to the MQTT broker, collects messages from it
+(using the topic prefix) and stores them in memory. Each next-coming message replaces
+the previous one and updates the time when it was received.
+
+`dioxy` also monitors orphaned metrics and periodically cleans up an obsolete
+metrics that have not been updated for some time. You can also configure these
+options as well.
+
+`dioxy` provides a simple HTTP server to let external systems grub these aggregated
+metrics from the status page. Every time you request this page, application
+serializes Golang memory struct into JSON message and responses with 200 OK.
+
+Otherwise if something went wrong, the application returns
+500 Internal Server Error with empty reply.
+
+## MQTT message format
+
+MQTT message should be in following format:
+
+```
+/{topic_prefix}/{metrics} {value}
+```
+
+JSON representation is:
+
+```
+{
+  "{topic_prefix}": {
+    "metrics": "{metrics}",
+    "value": "{value}",
+    "updated_at": "{updated_at}"
+  }
+}
+```
+
+`topic_prefix` is the string that begins each MQTT message. `metrics` is the measurement name and `value` its value.
+Every measurement also includes `updated_at` field - particular time when the last message received from.
+
 ## Installation
 
 ### From prebuilt package for RHEL7/CentOS7
@@ -30,32 +70,32 @@ Done.
 
 ## Getting started
 
-Set up dioxy configuration to aggregate MQTT metrics.
+Set up `dioxy` configuration to aggregate MQTT metrics.
 
 ```shell
 [mqtt]
 
-  # MQTT broker IP
+  # MQTT broker IP or FQDN
   ip: mqtt.example.tld
 
   # MQTT broker port
   port: 1883 
 
-  # MQTT username to authenticate to
+  # MQTT username (required)
   user: username
 
-  # MQTT password to authenticate to
+  # MQTT password (required)
   password: keepinsecret
 
-  # MQTT topic to listen to
+  # MQTT topic prefix expression
   topic: /devices/MT8060/#
 
 [store]
 
-  # Time in seconds to delete obsolete data (TTL)
+  # Time in seconds to delete orphaned metrics (TTL)
   ttl: 86400
 
-  # Time in seconds between looking for an obsolete data
+  # Time in seconds between looking for an orphaned metrics
   clean-interval: 1500
 
 [http]
@@ -78,7 +118,7 @@ Set up dioxy configuration to aggregate MQTT metrics.
   perms: 600
 
   # Default log level (debug/info/warn/error/crit)
-  level: debug
+  level: info
 ```
 
 Launch systemd unit and make sure it will be launched after reboot.
@@ -95,6 +135,15 @@ curl -sL http://127.0.0.1:33407/ | jq .
 ```
 
 Done.
+
+## Restrictions
+
+We do not provide any mechanism to assosiate metrics with aggregating function.
+`dioxy` replaces the last value every time we receive a next one. We rely that
+your monitoring system is processing data on their own if needed.
+
+`dioxy` also does not support TLS encryption and anonymous access to MQTT
+broker. We will improve this a bit later.
 
 ## Usage
 

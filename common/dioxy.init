@@ -25,7 +25,6 @@ conf_file="/etc/dioxy.knf"
 kv[file_limit]="10240:10240"
 kv[user]="dioxy"
 kv[pid_dir]="/var/run/dioxy"
-kv[log]="/var/log/dioxy/errors.log"
 
 ###############################################################################
 

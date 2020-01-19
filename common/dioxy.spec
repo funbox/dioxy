@@ -54,7 +54,7 @@ Group:           Applications/System
 License:         MIT
 URL:             https://github.com/gongled/dioxy
 
-Source0:         %{name}-%{version}.tar.gz
+Source0:         %{name}-%{version}.tar.bz2
 
 BuildRoot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
