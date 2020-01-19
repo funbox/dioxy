@@ -95,6 +95,7 @@ func listenMQTT(uri *url.URL, topic string) {
 	})
 
 	for token.Wait() {
+		time.Sleep(1 * time.Second)
 	}
 
 	if err := token.Error(); err != nil {
