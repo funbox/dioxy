@@ -6,6 +6,14 @@
 mostly for collecting CO2, temperature and humidity metrics from MT8060 in pair with ESP8266 microcontroller. This project is a
 part of health measurement system for office workers.
 
+## Requirements
+
+MQTT message MUST use the following format:
+
+```
+{topic_prefix}/{device_id}/{metrics}
+```
+
 ## Installation
 
 ### From prebuilt package for RHEL7/CentOS7
@@ -30,7 +38,7 @@ Done.
 
 ## Getting started
 
-Set up dioxy configuration to aggregate MQTT metrics.
+Set up `dioxy` configuration to aggregate MQTT metrics.
 
 ```shell
 [mqtt]
