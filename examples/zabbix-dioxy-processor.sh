@@ -107,6 +107,8 @@ main() {
   local action="$1"
   shift
 
+  checkDeps
+
   case "$action" in
     "get")
       zbx.get "$@"
