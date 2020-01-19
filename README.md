@@ -52,6 +52,12 @@ Every measurement also includes `updated_at` field - particular time when the la
 
 You can find RPM packages attached to releases on [Release page](https://github.com/gongled/dioxy/releases).
 
+Please, keep in mind that ESSENTIAL KAOS RHEL/CentOS 7 should be installed.
+
+```
+[sudo] yum install -y https://yum.kaos.st/kaos-repo-latest.el7.noarch.rpm
+```
+
 ### From the source code
 
 Fetch Go dependencies for compiling binary from the source code.
