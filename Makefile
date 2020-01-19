@@ -29,6 +29,7 @@ git-config: ## Configure git redirects for stable import path services
 deps: git-config ## Download dependencies
 	go get -d -v github.com/gongled/dioxy
 	go get -d -v github.com/valyala/fasthttp
+	go get -d -v github.com/google/uuid
 	go get -d -v pkg.re/essentialkaos/ek.v10
 
 fmt: ## Format source code with gofmt

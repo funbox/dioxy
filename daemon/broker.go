@@ -9,9 +9,12 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	store "github.com/gongled/dioxy/store"
+	uuid "github.com/google/uuid"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
+
+const STORE_KEY_FORMAT = "%s@%s"
 
 var datastore *store.Store
 
@@ -43,7 +46,7 @@ func parseMQTTMessage(msg mqtt.Message) *store.Info {
 	metrics := filepath.Base(msg.Topic())
 
 	return &store.Info{
-		Name:     fmt.Sprintf("%s@%s", deviceId, metrics),
+		Name:     fmt.Sprintf(STORE_KEY_FORMAT, deviceId, metrics),
 		DeviceId: deviceId,
 		Metrics:  metrics,
 		Value:    string(msg.Payload()),
@@ -83,7 +86,10 @@ func connectMQTT(clientId string, uri *url.URL) mqtt.Client {
 
 // listenMQTT listens MQTT broker and update store in memory with latest data
 func listenMQTT(uri *url.URL, topic string) {
-	client := connectMQTT("sub", uri)
+	clientId := uuid.New()
+
+	client := connectMQTT(clientId.String(), uri)
+
 	token := client.Subscribe(topic, 0, func(client mqtt.Client, msg mqtt.Message) {
 		datastore.Add(parseMQTTMessage(msg))
 	})
