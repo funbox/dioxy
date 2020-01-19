@@ -1,4 +1,4 @@
-[About](#about) • [Installation](#installation) • [Getting started](#getting-started) • [Usage](#usage) • [License](#license)
+[About](#about) • [How it works](#how-it-works) • [MQTT message format](#mqtt-message-format) • [Installation](#installation) • [Getting started](#getting-started) • [Restrictions](#restrictions) • [Usage](#usage) • [License](#license)
 
 # About
 
