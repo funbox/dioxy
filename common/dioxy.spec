@@ -38,6 +38,17 @@
 
 ################################################################################
 
+%define __ln              %{_bin}/ln
+%define __touch           %{_bin}/touch
+%define __service         %{_sbin}/service
+%define __chkconfig       %{_sbin}/chkconfig
+%define __useradd         %{_sbindir}/useradd
+%define __groupadd        %{_sbindir}/groupadd
+%define __getent          %{_bindir}/getent
+%define __systemctl       %{_bindir}/systemctl
+
+################################################################################
+
 %define debug_package     %{nil}
 
 ################################################################################
