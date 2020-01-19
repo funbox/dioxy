@@ -6,13 +6,45 @@
 mostly for collecting CO2, temperature and humidity metrics from MT8060 in pair with ESP8266 microcontroller. This project is a
 part of health measurement system for office workers.
 
-## Requirements
+## How it works
 
-MQTT message MUST use the following format:
+When you run `dioxy`, it connects to the MQTT broker, collects messages from it
+(using the topic prefix) and stores them in memory. Each next-coming message replaces
+the previous one and updates the time when it was received.
+
+`dioxy` also monitors orphaned metrics and periodically cleans up an obsolete
+metrics that have not been updated for some time. You can also configure these
+options as well.
+
+`dioxy` provides a simple HTTP server to let external systems grub these aggregated
+metrics from the status page. Every time you request this page, application
+serializes Golang memory struct into JSON message and responses with 200 OK.
+
+Otherwise if something went wrong, the application returns
+500 Internal Server Error with empty reply.
+
+## MQTT message format
+
+MQTT message should be in following format:
 
 ```
-{topic_prefix}/{device_id}/{metrics}
+/{topic_prefix}/{metrics} {value}
 ```
+
+JSON representation is:
+
+```
+{
+  "{topic_prefix}": {
+    "metrics": "{metrics}",
+    "value": "{value}",
+    "updated_at": "{updated_at}"
+  }
+}
+```
+
+`topic_prefix` is the string that begins each MQTT message. `metrics` is the measurement name and `value` its value.
+Every measurement also includes `updated_at` field - particular time when the last message received from.
 
 ## Installation
 
@@ -103,6 +135,13 @@ curl -sL http://127.0.0.1:33407/ | jq .
 ```
 
 Done.
+
+## Restrictions
+
+We do not provide any mechanism to assosiate metrics with aggregating function.
+`dioxy` replaces the last value every time we receive a next one.
+
+We rely that your monitoring system is processing data on their own if needed.
 
 ## Usage
 
