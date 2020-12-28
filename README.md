@@ -1,10 +1,10 @@
-[About](#about) • [How it works](#how-it-works) • [MQTT message format](#mqtt-message-format) • [Installation](#installation) • [Getting started](#getting-started) • [Restrictions](#restrictions) • [Usage](#usage) • [License](#license)
-
-# About
+# dioxy
 
 `dioxy` is simple aggregating proxy for MQTT broker metrics in JSON format. We develop and maintain this software 
 mostly for collecting CO2, temperature and humidity metrics from MT8060 in pair with ESP8266 microcontroller. This project is a
 part of health measurement system for office workers.
+
+[How it works](#how-it-works) • [MQTT message format](#mqtt-message-format) • [Installation](#installation) • [Getting started](#getting-started) • [Restrictions](#restrictions) • [Usage](#usage) • [License](#license)
 
 ## How it works
 
@@ -50,7 +50,7 @@ Every measurement also includes `updated_at` field - particular time when the la
 
 ### From prebuilt package for RHEL7/CentOS7
 
-You can find RPM packages attached to releases on [Release page](https://github.com/gongled/dioxy/releases).
+You can find RPM packages attached to releases on [Release page](https://github.com/funbox/dioxy/releases).
 
 Please, keep in mind that ESSENTIAL KAOS RHEL/CentOS 7 should be installed.
 
